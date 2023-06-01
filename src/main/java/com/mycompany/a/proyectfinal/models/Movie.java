@@ -11,12 +11,12 @@ public class Movie {
     private int idMovie;
     private String nameMovie;
     private String genderMovie;
-    private Date year;
+    private String year;
 
     public Movie() {
     }
     
-    public Movie(int idMovie, String nameMovie, String genderMovie, Date year) {
+    public Movie(int idMovie, String nameMovie, String genderMovie, String year) {
         this.idMovie = idMovie;
         this.nameMovie = nameMovie;
         this.genderMovie = genderMovie;
@@ -47,11 +47,11 @@ public class Movie {
         this.genderMovie = genderMovie;
     }
 
-    public Date getAnio() {
+    public String getAnio() {
         return year;
     }
 
-    public void setAnio(Date year) {
+    public void setAnio(String year) {
         this.year = year;
     }
 
