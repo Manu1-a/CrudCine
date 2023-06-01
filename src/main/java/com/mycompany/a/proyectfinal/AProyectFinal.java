@@ -1,5 +1,7 @@
 package com.mycompany.a.proyectfinal;
 
+import com.mycompany.a.proyectfinal.presenters.Presenter;
+
 /**
  *
  * @author Manuel Silva
@@ -7,6 +9,6 @@ package com.mycompany.a.proyectfinal;
 public class AProyectFinal {
 
     public static void main(String[] args) {
-        System.out.println("Hello World!");
+        new Presenter();
     }
 }

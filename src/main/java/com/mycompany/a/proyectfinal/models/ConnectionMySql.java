@@ -17,23 +17,10 @@ public class ConnectionMySql {
     public static final String USER = "root";
     public static final String PASSWORD = "";
 
-    private Connection connection;
+    private final Connection connection;
 
-    public ConnectionMySql() {
-    }
-
-    public void initConnection() throws SQLException {
+    public ConnectionMySql()throws SQLException {
         this.connection = DriverManager.getConnection(URL, USER, PASSWORD);
-    }
-
-    public static void closeConnection(Connection conn) {
-        if (conn != null) {
-            try {
-                conn.close();
-            } catch (SQLException e) {
-                System.out.println("Error al cerrar la conexión: " + e.getMessage());
-            }
-        }
     }
     
     public void insertMovie(Movie movie) throws SQLException {
@@ -41,7 +28,7 @@ public class ConnectionMySql {
         ps.setInt(1, movie.getIdMovie());
         ps.setString(2, movie.getNameMovie());
         ps.setString(3, movie.getGenderMovie());
-        ps.setString(4, movie.getAnio());
+        ps.setString(4, movie.getYear());
         ps.executeUpdate();
     }
 
@@ -69,7 +56,7 @@ public class ConnectionMySql {
             movie.setIdMovie(resultSet.getInt("id_pelicula"));
             movie.setNameMovie(resultSet.getString("titulo"));
             movie.setGenderMovie(resultSet.getString("genero"));
-            movie.setAnio(resultSet.getString("Anio"));
+            movie.setYear(resultSet.getString("Anio"));
             movies.add(movie);
         }
         return movies;
@@ -126,5 +113,82 @@ public class ConnectionMySql {
             movieActor.setIdMovie(resultSet.getInt(resultSet.findColumn("id_director")));
         }
         return movieDirectors;
+    }
+    
+     public ArrayList<Movie> serchIdMovies(int num) throws SQLException {
+        ArrayList<Movie> movies = new ArrayList<>();
+        PreparedStatement statement = this.connection.prepareStatement("SELECT * FROM peliculas WHERE id_pelicula LIKE ?");
+        statement.setString(1, num + "%");
+        ResultSet resultSet = statement.executeQuery();
+        Movie movie;
+        while (resultSet.next()) {
+            movie = new Movie(resultSet.getInt("id_pelicula"), resultSet.getString("titulo"), resultSet.getString("genero"), resultSet.getString("anio"));
+            movies.add(movie);
+        }
+        return movies;
+    }
+
+    public ArrayList<Actor> serchIdActors(int num) throws SQLException {
+        ArrayList<Actor> actors = new ArrayList<>();
+        PreparedStatement statement = this.connection.prepareStatement("SELECT * FROM actores WHERE id_actor LIKE ?");
+        statement.setString(1, num + "%");
+        ResultSet resultSet = statement.executeQuery();
+        Actor actor;
+        while (resultSet.next()) {
+            actor = new Actor(resultSet.getInt("id_actor"), resultSet.getString("nombre"));
+            actors.add(actor);
+        }
+
+        return actors;
+    }
+
+    public ArrayList<Director> serchIdDirector(int num) throws SQLException {
+        ArrayList<Director> directors = new ArrayList<>();
+        PreparedStatement statement = this.connection.prepareStatement("SELECT * FROM directores WHERE id_director LIKE ?");
+        statement.setString(1, num + "%");
+        ResultSet resultSet = statement.executeQuery();
+        Director director;
+        while (resultSet.next()) {
+            director = new Director(resultSet.getInt("id_director"), resultSet.getString("nombre"));
+            directors.add(director);
+        }
+
+        return directors;
+    }
+
+    public boolean delete(String table, String nameId, int id) throws SQLException {
+        PreparedStatement statement = statement = connection.prepareStatement("DELETE FROM " + table + " WHERE " + nameId + " = ?");
+        statement.setInt(1, id);
+        int filasAfectadas = statement.executeUpdate();
+
+        return filasAfectadas > 0;
+    }
+
+    public boolean update(int option, int id, String newInfo) throws SQLException {
+        String[] info = newInfo.split(";");
+        System.out.println(info[0] + "-" + info[1]);
+            PreparedStatement statement = null;
+            switch (option) {
+                case 0 -> {
+                    statement = connection.prepareStatement("UPDATE peliculas SET titulo = ?, genero = ?, anio = ? WHERE id_pelicula = ?");
+                    statement.setString(1, info[0]);
+                    statement.setString(2, info[1]);
+                    statement.setString(3, info[2]);
+                    statement.setInt(4, id);
+                }
+                case 1 -> {
+                    statement = connection.prepareStatement("UPDATE actores SET nombre = ? WHERE id_actor = ?");
+                    statement.setString(1, info[0]);
+                    statement.setInt(2, id);
+                }
+                case 2 -> {
+                    statement = connection.prepareStatement("UPDATE directores SET nombre = ? WHERE id_director = ?");
+                    statement.setString(1, info[0]);
+                    statement.setInt(2, id);
+                }
+            }
+            int filasAfectadas = statement.executeUpdate();
+
+            return (filasAfectadas > 0);
     }
 }

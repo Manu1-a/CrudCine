@@ -1,7 +1,5 @@
 package com.mycompany.a.proyectfinal.models;
 
-import java.util.Date;
-
 /**
  *
  * @author gabdi
@@ -15,7 +13,7 @@ public class Movie {
 
     public Movie() {
     }
-    
+
     public Movie(int idMovie, String nameMovie, String genderMovie, String year) {
         this.idMovie = idMovie;
         this.nameMovie = nameMovie;
@@ -47,12 +45,11 @@ public class Movie {
         this.genderMovie = genderMovie;
     }
 
-    public String getAnio() {
+    public String getYear() {
         return year;
     }
 
-    public void setAnio(String year) {
+    public void setYear(String year) {
         this.year = year;
     }
-
 }
