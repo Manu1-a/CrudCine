@@ -35,6 +35,29 @@ public class ConnectionMySql {
             }
         }
     }
+    
+    public void insertMovie(Movie movie) throws SQLException {
+        PreparedStatement ps = this.connection.prepareStatement("INSERT INTO pelicula (id_pelicula,titulo, genero, anio) VALUES (?, ?, ?, ?)");
+        ps.setInt(1, movie.getIdMovie());
+        ps.setString(2, movie.getNameMovie());
+        ps.setString(3, movie.getGenderMovie());
+        ps.setString(4, movie.getAnio());
+        ps.executeUpdate();
+    }
+
+    public void insertActor(Actor actor) throws SQLException {
+        PreparedStatement ps = this.connection.prepareStatement("INSERT INTO actor (id_actor, nombre) VALUES (?, ?)");
+        ps.setInt(1, actor.getIdActor());
+        ps.setString(2, actor.getNameActor());
+        ps.executeUpdate();
+    }
+
+    public void insertDirector(Director director) throws SQLException {
+        PreparedStatement ps = this.connection.prepareStatement("INSERT INTO director (id_director, nombre) VALUES (?, ?)");
+        ps.setInt(1, director.getIdDirector());
+        ps.setString(2, director.getNombreDirector());
+        ps.executeUpdate();
+    }
 
     public ArrayList<Movie> getMovies() throws SQLException {
         ArrayList<Movie> movies = new ArrayList<>();
@@ -46,6 +69,7 @@ public class ConnectionMySql {
             movie.setIdMovie(resultSet.getInt("id_pelicula"));
             movie.setNameMovie(resultSet.getString("titulo"));
             movie.setGenderMovie(resultSet.getString("genero"));
+            movie.setAnio(resultSet.getString("Anio"));
             movies.add(movie);
         }
         return movies;
